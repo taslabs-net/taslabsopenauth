@@ -36,8 +36,7 @@ const ALLOWED_CLIENTS = {
       "https://auth.taslabs.net/callback" // For the demo flow
     ]
   },
-  // Pattern for test clients - add your custom test clients here
-  "test-yourname": {
+  "test": {
     name: "Test WordPress Site",
     allowed_redirects: [
       "https://test.schenanigans.dev/taslabs-oauth-callback",
@@ -48,20 +47,16 @@ const ALLOWED_CLIENTS = {
 
 function validateClient(client_id: string, redirect_uri: string): boolean {
   const client = ALLOWED_CLIENTS[client_id as keyof typeof ALLOWED_CLIENTS];
-  if (client) {
-    // Allow any redirect for demo client
-    if (client_id === "your-client-id") {
-      return true;
-    }
-    return client.allowed_redirects.includes(redirect_uri);
+  if (!client) {
+    return false;
   }
   
-  // Allow any client ID with WordPress callback URL (with or without trailing slash)
-  if (redirect_uri.includes("/taslabs-oauth-callback")) {
+  // Allow any redirect for demo client
+  if (client_id === "your-client-id") {
     return true;
   }
   
-  return false;
+  return client.allowed_redirects.includes(redirect_uri);
 }
 
 export default {
@@ -165,17 +160,10 @@ export default {
         const client_id = request.clientID;
         const redirect_uri = request.redirectURI;
         
-        // Allow any client with WordPress callback URL
-        if (redirect_uri.includes("/taslabs-oauth-callback")) {
-          return;
+        // Only allow predefined clients with verified domains
+        if (!validateClient(client_id, redirect_uri)) {
+          throw new Error(`Client ${client_id} is not authorized for redirect URI ${redirect_uri}`);
         }
-        
-        // Allow predefined clients
-        if (validateClient(client_id, redirect_uri)) {
-          return;
-        }
-        
-        throw new Error(`Client ${client_id} is not authorized`);
       },
       providers: {
         password: PasswordProvider(
