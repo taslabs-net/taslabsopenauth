@@ -192,5 +192,7 @@ add-contact-api.js
 # WordPress integration files (local use only)
 wordpress-oauth-integration.php
 taslabs-oauth-plugin.php
+taslabs-oauth-plugin/
+taslabs-oauth-plugin.zip
 WORDPRESS_SETUP.md
 PLUGIN_INSTALLATION.md
