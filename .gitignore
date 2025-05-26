@@ -184,3 +184,7 @@ build/
 
 # Contact form worker (contains sensitive config)
 contactformworker.js
+
+# GitHub automation scripts (local use only)
+add-contact-to-readmes.sh
+add-contact-api.js
