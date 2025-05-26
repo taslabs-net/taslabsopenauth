@@ -181,3 +181,6 @@ build/
 
 # Turbo output
 .turbo/
+
+# Contact form worker (contains sensitive config)
+contactformworker.js
