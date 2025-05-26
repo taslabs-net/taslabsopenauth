@@ -78,7 +78,7 @@ export default {
         ),
       },
       theme: {
-        title: "myAuth",
+        title: "Taslabs ID",
         primary: "#0051c3",
         favicon: "https://workers.cloudflare.com//favicon.ico",
         logo: {
