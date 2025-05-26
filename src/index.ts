@@ -55,7 +55,7 @@ export default {
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body: new URLSearchParams({
-                    from: `noreply@${env.MAILGUN_DOMAIN}`,
+                    from: "Taslabs OAuth <auth@taslabs.com>",
                     to: email,
                     subject: "Your verification code",
                     text: `Your verification code is: ${code}`,
