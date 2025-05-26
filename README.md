@@ -47,3 +47,9 @@ A live public deployment of this template is available at [https://openauth-temp
    ```bash
    npx wrangler deploy
    ```
+
+---
+
+## Contact
+
+Questions or feedback? [Get in touch!](https://contact.taslabs.net/)
