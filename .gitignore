@@ -188,3 +188,9 @@ contactformworker.js
 # GitHub automation scripts (local use only)
 add-contact-to-readmes.sh
 add-contact-api.js
+
+# WordPress integration files (local use only)
+wordpress-oauth-integration.php
+taslabs-oauth-plugin.php
+WORDPRESS_SETUP.md
+PLUGIN_INSTALLATION.md
