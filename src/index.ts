@@ -61,9 +61,76 @@ export default {
       url.pathname = "/authorize";
       return Response.redirect(url.toString());
     } else if (url.pathname === "/callback") {
-      return Response.json({
-        message: "OAuth flow complete!",
-        params: Object.fromEntries(url.searchParams.entries()),
+      return new Response(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Registration Successful - Taslabs ID</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+              background: linear-gradient(135deg, #0051c3 0%, #2C7CB0 100%);
+              margin: 0; 
+              min-height: 100vh; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center;
+              color: white;
+            }
+            .container { 
+              text-align: center; 
+              padding: 40px; 
+              background: rgba(255,255,255,0.1); 
+              border-radius: 12px; 
+              backdrop-filter: blur(10px);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+              max-width: 400px;
+            }
+            h1 { 
+              margin: 0 0 20px 0; 
+              font-size: 2.5rem;
+              font-weight: 300;
+            }
+            .checkmark { 
+              font-size: 4rem; 
+              color: #28a745; 
+              margin-bottom: 20px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            p { 
+              font-size: 1.1rem; 
+              margin-bottom: 30px; 
+              opacity: 0.9;
+              line-height: 1.6;
+            }
+            .redirect-notice { 
+              font-size: 0.9rem; 
+              opacity: 0.7;
+              border-top: 1px solid rgba(255,255,255,0.2);
+              padding-top: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="checkmark">✓</div>
+            <h1>Registration Successful!</h1>
+            <p>Your Taslabs ID has been created and your email has been verified.</p>
+            <div class="redirect-notice">
+              Redirecting you to taslabs.net in 3 seconds...
+            </div>
+          </div>
+          <script>
+            setTimeout(() => {
+              window.location.href = 'https://taslabs.net';
+            }, 3000);
+          </script>
+        </body>
+        </html>
+      `, {
+        headers: { "Content-Type": "text/html" }
       });
     }
 
