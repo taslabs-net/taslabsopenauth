@@ -23,5 +23,11 @@
       "enabled": true
     }
   },
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "auth.taslabs.net/*",
+      "custom_domain": true
+    }
+  ]
 }
