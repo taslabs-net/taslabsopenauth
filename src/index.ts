@@ -45,15 +45,34 @@ export default {
       providers: {
         password: PasswordProvider(
           PasswordUI({
-            // eslint-disable-next-line @typescript-eslint/require-await
             sendCode: async (email, code) => {
-              // This is where you would email the verification code to the
-              // user, e.g. using Resend:
-              // https://resend.com/docs/send-with-cloudflare-workers
-              console.log(`Sending code ${code} to ${email}`);
+              const response = await fetch(
+                `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`,
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Basic ${btoa(`api:${env.MAILGUN_API_KEY}`)}`,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  body: new URLSearchParams({
+                    from: `noreply@${env.MAILGUN_DOMAIN}`,
+                    to: email,
+                    subject: "Your verification code",
+                    text: `Your verification code is: ${code}`,
+                    html: `<p>Your verification code is: <strong>${code}</strong></p>`,
+                  }),
+                }
+              );
+              
+              if (!response.ok) {
+                console.error("Failed to send email:", await response.text());
+                throw new Error("Failed to send verification email");
+              }
+              
+              console.log(`Verification code sent to ${email}`);
             },
             copy: {
-              input_code: "Code (check Worker logs)",
+              input_code: "Enter verification code",
             },
           }),
         ),

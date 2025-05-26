@@ -2,6 +2,7 @@
   "compatibility_date": "2025-04-01",
   "main": "src/index.ts",
   "name": "taslabsopenauth",
+  "account_id": "b15ec51cdf96746b05cb3983874d65a2",
   "upload_source_maps": true,
   "kv_namespaces": [
     {
