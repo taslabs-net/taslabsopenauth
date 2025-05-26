@@ -321,11 +321,17 @@ const htmlTemplate = `<!DOCTYPE html>
     .verify-btn:disabled { background-color: #ccc; cursor: not-allowed; }
     .verified-indicator { color: #28a745; font-weight: bold; font-size: 0.9em; white-space: nowrap; }
     .verified-indicator.show { display: inline !important; }
+    .info-blurb { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 15px; margin-bottom: 20px; border-left: 4px solid #2C7CB0; }
+    .info-blurb p { margin: 0; color: #495057; line-height: 1.5; }
+    .info-blurb strong { color: #2C7CB0; }
   </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
   <h1>Contact</h1>
+  <div class="info-blurb">
+    <p><strong>Email Verification:</strong> Emails are verified using a real email address. If you haven't verified before, use a real email address but not your email password. You'll create a unique password for Taslabs only during the verification process.</p>
+  </div>
   <div id="success-message" class="success" style="display: none;">
     Your message has been sent successfully! We'll get back to you soon.
   </div>
