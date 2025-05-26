@@ -35,21 +35,33 @@ const ALLOWED_CLIENTS = {
     allowed_redirects: [
       "https://auth.taslabs.net/callback" // For the demo flow
     ]
+  },
+  // Pattern for test clients - add your custom test clients here
+  "test-yourname": {
+    name: "Test WordPress Site",
+    allowed_redirects: [
+      "https://test.schenanigans.dev/taslabs-oauth-callback",
+      "http://test.schenanigans.dev/taslabs-oauth-callback"
+    ]
   }
 };
 
 function validateClient(client_id: string, redirect_uri: string): boolean {
   const client = ALLOWED_CLIENTS[client_id as keyof typeof ALLOWED_CLIENTS];
-  if (!client) {
-    return false;
+  if (client) {
+    // Allow any redirect for demo client
+    if (client_id === "your-client-id") {
+      return true;
+    }
+    return client.allowed_redirects.includes(redirect_uri);
   }
   
-  // Allow any redirect for demo client
-  if (client_id === "your-client-id") {
+  // Allow any client ID with WordPress callback URL (with or without trailing slash)
+  if (redirect_uri.includes("/taslabs-oauth-callback")) {
     return true;
   }
   
-  return client.allowed_redirects.includes(redirect_uri);
+  return false;
 }
 
 export default {
@@ -142,28 +154,29 @@ export default {
     }
 
     // The real OpenAuth server code starts here:
-    // Security check for OAuth authorize requests
-    if (url.pathname === "/authorize") {
-      const client_id = url.searchParams.get("client_id");
-      const redirect_uri = url.searchParams.get("redirect_uri");
-      
-      if (!client_id || !redirect_uri) {
-        return new Response("Missing required parameters", { status: 400 });
-      }
-      
-      if (!validateClient(client_id, redirect_uri)) {
-        return new Response(`Unauthorized client: ${client_id}. This OAuth server is for Taslabs services only.`, { 
-          status: 401,
-          headers: { "Content-Type": "text/plain" }
-        });
-      }
-    }
+    // Allow all OAuth requests - no client restrictions
 
     return issuer({
       storage: CloudflareStorage({
         namespace: env.AUTH_STORAGE,
       }),
       subjects,
+      authorizeRequest: async (ctx, request) => {
+        const client_id = request.clientID;
+        const redirect_uri = request.redirectURI;
+        
+        // Allow any client with WordPress callback URL
+        if (redirect_uri.includes("/taslabs-oauth-callback")) {
+          return;
+        }
+        
+        // Allow predefined clients
+        if (validateClient(client_id, redirect_uri)) {
+          return;
+        }
+        
+        throw new Error(`Client ${client_id} is not authorized`);
+      },
       providers: {
         password: PasswordProvider(
           PasswordUI({
