@@ -73,6 +73,9 @@ export default {
             },
             copy: {
               input_code: "Enter verification code",
+              input_email_placeholder: "Enter your email address",
+              submit_email: "Sign In / Sign Up",
+              heading: "Sign In / Sign Up",
             },
           }),
         ),
