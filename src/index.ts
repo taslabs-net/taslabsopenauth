@@ -14,6 +14,37 @@ const subjects = createSubjects({
   }),
 });
 
+// Allowed OAuth clients for security
+const ALLOWED_CLIENTS = {
+  "contact-form": {
+    name: "Taslabs Contact Form",
+    allowed_redirects: [
+      "https://contact.taslabs.net/callback",
+      "http://localhost:8787/callback", // For local development
+    ]
+  },
+  "your-client-id": {
+    name: "Demo Client", 
+    allowed_redirects: [
+      `${new URL("").origin}/callback` // For the demo flow
+    ]
+  }
+};
+
+function validateClient(client_id: string, redirect_uri: string): boolean {
+  const client = ALLOWED_CLIENTS[client_id as keyof typeof ALLOWED_CLIENTS];
+  if (!client) {
+    return false;
+  }
+  
+  // Allow any redirect for demo client
+  if (client_id === "your-client-id") {
+    return true;
+  }
+  
+  return client.allowed_redirects.includes(redirect_uri);
+}
+
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     // This top section is just for demo purposes. In a real setup another
@@ -37,6 +68,23 @@ export default {
     }
 
     // The real OpenAuth server code starts here:
+    // Security check for OAuth authorize requests
+    if (url.pathname === "/authorize") {
+      const client_id = url.searchParams.get("client_id");
+      const redirect_uri = url.searchParams.get("redirect_uri");
+      
+      if (!client_id || !redirect_uri) {
+        return new Response("Missing required parameters", { status: 400 });
+      }
+      
+      if (!validateClient(client_id, redirect_uri)) {
+        return new Response(`Unauthorized client: ${client_id}. This OAuth server is for Taslabs services only.`, { 
+          status: 401,
+          headers: { "Content-Type": "text/plain" }
+        });
+      }
+    }
+
     return issuer({
       storage: CloudflareStorage({
         namespace: env.AUTH_STORAGE,
