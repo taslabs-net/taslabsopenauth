@@ -26,7 +26,7 @@ const ALLOWED_CLIENTS = {
   "your-client-id": {
     name: "Demo Client", 
     allowed_redirects: [
-      `${new URL("").origin}/callback` // For the demo flow
+      "https://auth.taslabs.net/callback" // For the demo flow
     ]
   }
 };
