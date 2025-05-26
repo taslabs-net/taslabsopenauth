@@ -23,6 +23,13 @@ const ALLOWED_CLIENTS = {
       "http://localhost:8787/callback", // For local development
     ]
   },
+  "wordpress-site": {
+    name: "WordPress Site",
+    allowed_redirects: [
+      "https://test.schenanigans.dev/taslabs-oauth-callback",
+      "http://test.schenanigans.dev/taslabs-oauth-callback", // For non-HTTPS
+    ]
+  },
   "your-client-id": {
     name: "Demo Client", 
     allowed_redirects: [
